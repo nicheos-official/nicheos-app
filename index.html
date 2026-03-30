@@ -102,9 +102,9 @@ async function generate(){
 Keys: niche_label(string), pains(8 objects {text: max 12 words}), hooks(5 strings max 15 words each), products(5 objects {name: max 6 words, price: string like "$27"}), content_plan(3 objects {week: string, posts:[3 strings max 8 words]}), funnel(4 objects {step:string, title:max 4 words, desc:max 10 words, color:purple|teal|amber|coral}), scores(object: demand,competition,monetization,content_ease,overall — integers 1-100)`;
 
   try{
-    const r=await fetch("https://api.anthropic.com/v1/messages",{
+    const r=await fetch("https://nicheos-api.getnicheos.workers.dev",{
       method:"POST",
-      headers:{"Content-Type":"application/json","anthropic-dangerous-direct-browser-access":"true","x-api-key":"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"},
+      headers:{"Content-Type":"application/json"},
       body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1500,messages:[{role:"user",content:prompt}]})
     });
     const data=await r.json();
