@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NicheOS™ — The Niche Domination System</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0F0C29;color:#fff;min-height:100vh}
+header{padding:1.5rem 2rem;border-bottom:1px solid rgba(127,119,221,0.2);display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:24px;font-weight:800;color:#fff}.logo span{color:#7F77DD}
+.logo-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.05em}
+.hero{text-align:center;padding:3rem 1.5rem 2rem}
+.hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.15;margin-bottom:1rem}
+.hero h1 span{color:#7F77DD}
+.hero p{font-size:16px;color:rgba(255,255,255,0.6);max-width:520px;margin:0 auto 2rem;line-height:1.7}
+.search-box{max-width:620px;margin:0 auto;display:flex;gap:10px;padding:0 1rem}
+.search-box input{flex:1;padding:14px 18px;border-radius:10px;border:1.5px solid rgba(127,119,221,0.4);background:rgba(255,255,255,0.07);color:#fff;font-size:15px;outline:none}
+.search-box input::placeholder{color:rgba(255,255,255,0.35)}
+.search-box input:focus{border-color:#7F77DD}
+.btn{padding:14px 24px;background:#7F77DD;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#534AB7}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.loading{text-align:center;padding:3rem 0;display:none}
+.spinner{width:36px;height:36px;border:3px solid rgba(127,119,221,0.2);border-top-color:#7F77DD;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{color:rgba(255,255,255,0.5);font-size:14px}
+.results{max-width:900px;margin:2rem auto;padding:0 1.5rem;display:none}
+.niche-tag{display:inline-block;background:rgba(127,119,221,0.2);border:1px solid rgba(127,119,221,0.4);color:#AFA9EC;font-size:13px;font-weight:700;padding:4px 14px;border-radius:20px;margin-bottom:1.5rem;letter-spacing:0.04em}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:1.25rem}
+.card-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:12px}
+.pain{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;color:rgba(255,255,255,0.85)}.pain:last-child{border-bottom:none}
+.pn{color:#7F77DD;font-size:11px;font-weight:700;min-width:18px;padding-top:1px}
+.hook{background:rgba(255,255,255,0.07);border-radius:8px;padding:8px 12px;font-size:13px;color:rgba(255,255,255,0.85);margin-bottom:6px;line-height:1.6}.hook:last-child{margin-bottom:0}
+.pr{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px}.pr:last-child{border-bottom:none}
+.pr-name{color:rgba(255,255,255,0.85)}
+.pr-price{background:rgba(29,158,117,0.2);color:#5DCAA5;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px}
+.wt{font-size:12px;font-weight:700;color:#7F77DD;margin:10px 0 4px}.wt:first-child{margin-top:0}
+.wp{font-size:12px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.06)}.wp:last-child{border-bottom:none}
+.sr{display:flex;align-items:center;margin-bottom:8px}
+.sl{font-size:12px;color:rgba(255,255,255,0.5);width:130px;flex-shrink:0}
+.sb{flex:1;height:5px;background:rgba(255,255,255,0.08);border-radius:10px;margin:0 10px}
+.sf{height:100%;border-radius:10px}
+.sv{font-size:12px;font-weight:700;min-width:28px;text-align:right;color:#fff}
+.ov{text-align:center;padding:12px 0 4px}
+.ob{font-size:40px;font-weight:800;color:#7F77DD}
+.os{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
+.fs{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)}.fs:last-child{border-bottom:none}
+.fi{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.ft{font-size:13px;font-weight:600;color:rgba(255,255,255,0.9)}
+.fd{font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px}
+.err{color:#F09595;font-size:13px;padding:1rem;background:rgba(226,75,74,0.1);border-radius:8px;margin:1rem auto;max-width:620px;text-align:center}
+footer{text-align:center;padding:2rem;color:rgba(255,255,255,0.25);font-size:12px;margin-top:2rem;border-top:1px solid rgba(255,255,255,0.06)}
+@media(max-width:580px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Niche<span>OS</span>™</div>
+    <div class="logo-sub">THE NICHE DOMINATION SYSTEM</div>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Enter any niche.<br><span>Get a full business blueprint</span><br>in 30 seconds.</h1>
+  <p>Pain points, Facebook hooks, product ideas, 90-day content plan, sales funnel & profitability score — instantly.</p>
+</div>
+
+<div class="search-box">
+  <input type="text" id="ni" placeholder="e.g. Yorkshire Terriers, Keto diet, Guitar for beginners..." />
+  <button class="btn" id="gbtn" onclick="generate()">Analyze</button>
+</div>
+
+<div class="loading" id="ld">
+  <div class="spinner"></div>
+  <p id="lmsg">Analyzing your niche...</p>
+</div>
+
+<div id="err-box"></div>
+<div class="results" id="res"></div>
+
+<footer>NicheOS™ &copy; 2026 — All rights reserved &nbsp;|&nbsp; getnicheos@gmail.com</footer>
+
+<script>
+const LM=["Mapping audience psychology...","Identifying pain points...","Crafting Facebook hooks...","Building your content plan...","Calculating niche score...","Assembling your blueprint..."];
+const FC={purple:{bg:'rgba(127,119,221,0.25)',c:'#AFA9EC'},teal:{bg:'rgba(29,158,117,0.25)',c:'#5DCAA5'},amber:{bg:'rgba(186,117,23,0.25)',c:'#EF9F27'},coral:{bg:'rgba(216,90,48,0.25)',c:'#F0997B'}};
+const SC={demand:'#7F77DD',competition:'#1D9E75',monetization:'#BA7517',content_ease:'#D85A30'};
+const SL={demand:'Demand',competition:'Low competition',monetization:'Monetization',content_ease:'Content ease'};
+
+async function generate(){
+  const niche=document.getElementById('ni').value.trim();
+  if(!niche)return;
+  const btn=document.getElementById('gbtn'),ld=document.getElementById('ld'),res=document.getElementById('res'),lmsg=document.getElementById('lmsg'),errBox=document.getElementById('err-box');
+  btn.disabled=true;ld.style.display='block';res.style.display='none';res.innerHTML='';errBox.innerHTML='';
+  let mi=0;lmsg.textContent=LM[0];
+  const iv=setInterval(()=>{mi=(mi+1)%LM.length;lmsg.textContent=LM[mi];},1400);
+
+  const prompt=`You are NicheOS™. Niche: "${niche}". Return ONLY valid JSON, no markdown, no backticks, no explanation.
+Keys: niche_label(string), pains(8 objects {text: max 12 words}), hooks(5 strings max 15 words each), products(5 objects {name: max 6 words, price: string like "$27"}), content_plan(3 objects {week: string, posts:[3 strings max 8 words]}), funnel(4 objects {step:string, title:max 4 words, desc:max 10 words, color:purple|teal|amber|coral}), scores(object: demand,competition,monetization,content_ease,overall — integers 1-100)`;
+
+  try{
+    const r=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1500,messages:[{role:"user",content:prompt}]})
+    });
+    const data=await r.json();
+    clearInterval(iv);ld.style.display='none';btn.disabled=false;
+    if(data.error){errBox.innerHTML=`<div class="err">Error: ${data.error.message}</div>`;return;}
+    const txt=(data.content||[]).map(i=>i.text||'').join('');
+    const d=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    render(d);res.style.display='block';
+  }catch(e){
+    clearInterval(iv);ld.style.display='none';btn.disabled=false;
+    errBox.innerHTML=`<div class="err">Something went wrong. Please try again.</div>`;
+  }
+}
+
+function render(d){
+  const painsH=d.pains.map((p,i)=>`<div class="pain"><span class="pn">${i+1}</span><span>${p.text}</span></div>`).join('');
+  const hooksH=d.hooks.map(h=>`<div class="hook">"${h}"</div>`).join('');
+  const prodsH=d.products.map(p=>`<div class="pr"><span class="pr-name">${p.name}</span><span class="pr-price">${p.price}</span></div>`).join('');
+  const planH=d.content_plan.map(w=>`<div class="wt">${w.week}</div>${w.posts.map(p=>`<div class="wp">${p}</div>`).join('')}`).join('');
+  const funnelH=d.funnel.map(f=>{const c=FC[f.color]||FC.purple;return`<div class="fs"><div class="fi" style="background:${c.bg};color:${c.c}">${f.step}</div><div><div class="ft">${f.title}</div><div class="fd">${f.desc}</div></div></div>`;}).join('');
+  const scH=['demand','competition','monetization','content_ease'].map(k=>`<div class="sr"><span class="sl">${SL[k]}</span><div class="sb"><div class="sf" style="width:${d.scores[k]}%;background:${SC[k]}"></div></div><span class="sv">${d.scores[k]}</span></div>`).join('');
+  document.getElementById('res').innerHTML=`
+    <div class="niche-tag">${d.niche_label}</div>
+    <div class="grid">
+      <div class="card"><div class="card-label">Audience pain points</div>${painsH}</div>
+      <div class="card"><div class="card-label">Niche score</div>${scH}<div class="ov"><div class="ob">${d.scores.overall}</div><div class="os">Overall niche potential</div></div></div>
+      <div class="card"><div class="card-label">Facebook hooks (ready to post)</div>${hooksH}</div>
+      <div class="card"><div class="card-label">Product ideas</div>${prodsH}</div>
+      <div class="card"><div class="card-label">90-day content plan</div>${planH}</div>
+      <div class="card"><div class="card-label">Sales funnel</div>${funnelH}</div>
+    </div>`;
+}
+
+document.getElementById('ni').addEventListener('keydown',e=>{if(e.key==='Enter')generate();});
+</script>
+</body>
+</html>
